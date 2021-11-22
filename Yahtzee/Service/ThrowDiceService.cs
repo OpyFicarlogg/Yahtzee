@@ -7,23 +7,62 @@ namespace Yahtzee.Service
 {
     public class ThrowDiceService : IThrowDiceService
     {
-        public DiceThrow ThrowDice()
+        private readonly Random rnd;
+        private DiceThrow diceThrow;
+        private const int min = 1;
+        private const int max = 6;
+        private const int diceNumber = 5;
+        private const int round = 3;
+        public ThrowDiceService()
         {
-            throw new NotImplementedException();
+            rnd = new Random();
+            diceThrow = new DiceThrow();
+        }
+
+        private int ThrowDice()
+        {
+            return rnd.Next(min, max + 1);
+        }
+
+        public DiceThrow ThrowDices()
+        {
+            //Ajouter un contrôle sur le nb de round 
+            if (diceThrow.diceList.Count.Equals(0))
+            {
+                List<Dice> lstDice = new List<Dice>();
+                for(int i = 0; i < diceNumber; i++)
+                {
+                    lstDice.Add(new Dice(this.ThrowDice()));
+                }
+                diceThrow.diceList = lstDice;
+            }
+            else
+            {
+                foreach(Dice dice in diceThrow.diceList)
+                {
+                    if (!dice.saved)
+                    {
+                        dice.value = this.ThrowDice();
+                    }
+                }
+            }
+
+            diceThrow.round += 1;
+            return diceThrow;
         }
 
         public void SaveDice(DiceThrow diceThrow)
         {
-            throw new NotImplementedException();
+            this.diceThrow = diceThrow;
         }
         public bool CanThrow()
         {
-            throw new NotImplementedException();
+            return this.diceThrow.round < round;
         }
 
         public void EndRound()
         {
-            throw new NotImplementedException();
+            this.diceThrow = new DiceThrow();
         }
 
         

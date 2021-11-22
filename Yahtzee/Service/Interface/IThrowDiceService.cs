@@ -6,7 +6,7 @@ namespace Yahtzee.Service.Interface
 {
     interface IThrowDiceService
     {
-        DiceThrow ThrowDice();
+        DiceThrow ThrowDices();
 
         void SaveDice(DiceThrow diceThrow);
 
