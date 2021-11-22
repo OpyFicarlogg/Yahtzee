@@ -8,10 +8,10 @@ namespace Yahtzee.Dto
         public List<Dice> diceList { get; set; }
         public int round { get; set; }
 
-        public DiceThrow(List<Dice> diceList)
+        public DiceThrow()
         {
-            this.diceList = diceList;
-            round = 1;
+            this.diceList = new List<Dice>();
+            round = 0;
         }
     }
 }
