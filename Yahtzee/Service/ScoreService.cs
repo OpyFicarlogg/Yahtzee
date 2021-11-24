@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Yahtzee.Dto;
 using Yahtzee.Dto.Score;
+using Yahtzee.Enumeration;
 using Yahtzee.Service.Interface;
 
 namespace Yahtzee.Service
@@ -11,26 +13,44 @@ namespace Yahtzee.Service
 
         public void setScoreBoard(Player player)
         {
-            throw new NotImplementedException();
+            player.ScoreBoard = new List<ScoreLine>();
+            foreach (ScoreValues scoreValue in (ScoreValues[])Enum.GetValues(typeof(ScoreValues)))
+            {
+                player.ScoreBoard.Add(new ScoreLine(scoreValue));
+            }
+        }
+
+        //TODO: ajouter param yahtzee
+        public void setScore(Player player,DiceThrow diceThrow,ScoreValues scoreValue)
+        {
+            foreach(ScoreLine line in player.ScoreBoard)
+            {
+                if (line.name.Equals(scoreValue.ToString()))
+                {
+                    line.isSet = true;
+                    line.Value = (line.defaultValue.Equals(0) ? diceThrow.diceList.Sum(dice => dice.value) : line.defaultValue);
+                }
+                //TODO: Passer au prochain user ?
+            }
         }
         public List<ScoreLine> GetEmptyLines(Player player)
         {
-            throw new NotImplementedException();
+            return player.ScoreBoard.Where(line => !line.isSet).ToList();
         }
 
         public int GetScore(Player player)
         {
-            throw new NotImplementedException();
+            return player.ScoreBoard.Sum(line => line.Value);
         }
 
-        public bool IsFull(Player player)
+        public Boolean IsFull(Player player)
         {
-            throw new NotImplementedException();
+            return player.ScoreBoard.Any(line => line.isSet);
         }
 
-        public bool IsLineEmpty(Player player)
+        public Boolean IsLineEmpty(Player player, ScoreValues scoreValue)
         {
-            throw new NotImplementedException();
+            return player.ScoreBoard.Any(line => !line.isSet && line.name.Equals(scoreValue.ToString()));
         }
     }
 }
